@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+{% block content %}
+<style>
+.square{
+    width:95%; 
+    background:#fff;    
+    border:2px #ccc solid;  /*边框*/
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<div class="col-md-1 column">
+                              
+</div> 
+<div class="col-md-10 column square" >
+
+<div style="padding-left:166px;color:#3ACC3A" > <h3>{{meg}}</h3>  </div> 
+
+<form action='' method='post' >  
+    {% csrf_token %}
+    {% for s in title_Bankemployes %}	
+        <div style="padding-left:166px;" > <h3> {{s.0}} </h3>  </div> 	
+        {% for b in s.1 %}	
+            {{forloop.counter}}. {{b.investigation}} <br>		
+            {% for c in choices %}
+				<label class="radio-inline">
+  					<input type="radio" name="{{ b.investigation }}" value={{c.0}} required> {{c.1}}
+
+				</label>&nbsp;&nbsp;
+    		{% endfor %}<br><br>    
+        {% endfor %}<br>
+    {% endfor %}<br>
+    <button type="submit" class="btn  btn-success btn-lg" style="margin-left: 128px;">提 交</button><br><br>
+</form>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'layout.html' %}
+{% block content %}
+<style>
+.square{
+    width:95%;    
+    border:2px #ccc solid;  /*边框*/
+    margin-left:6px;
+    }
+
+.mystyle{
+	font-size:18px;
+	padding-left:12px;
+	padding-top:4px;   
+}
+
+.mytab{
+	width:65%;
+	font-size:18px;
+	padding-left:12px;
+	padding-top:4px;   
+}
+
+
+</style>
+<div class="col-md-8 square" >
+<ul id="myTab" class="nav nav-tabs" style="background:#fff;">
+	<li class="active">
+		<a href="#home" data-toggle="tab">系统简介</a>
+	</li>
+	<li><a href="#ios" data-toggle="tab">技术标准</a></li>
+	<li class="dropdown">
+		<a href="#" id="myTabDrop1" class="dropdown-toggle" 
+		   data-toggle="dropdown">理论支持 
+			<b class="caret"></b>
+		</a>
+		<ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1">
+			<li><a href="#jmeter" tabindex="-1" data-toggle="tab">行员满意度</a></li>
+			<li><a href="#ejb" tabindex="-1" data-toggle="tab">行员敬业度</a></li>
+			<li><a href="#ejb1" tabindex="-1" data-toggle="tab">行员忠诚度</a></li>
+		</ul>
+	</li>
+</ul>
+<div id="myTabContent" class="tab-content" >
+	{% load markdown_deux_tags %}
+	<div class="tab-pane fade in active" id="home">		
+		<div class="mystyle">
+            {{Systematic_Introduction|markdown}}            
+		</div>	
+		    
+	</div>
+	<div class="tab-pane fade" id="ios">
+		<h4>一、问卷题 五个等级(五分制)对应关系</h4>
+
+		<div class="mytab">
+		    {{ table_abcde|safe }}
+		</div>
+        <hr>
+		<h4>二、数据统计</h4> 
+		<h4>根据问卷答题标题、答卷总人数 分五个等级进行统计。例如，问卷答题序号：0 答卷总人数：30</h4>
+		<div class="mytab">
+		    {{ table_per|safe }}
+		</div>
+        
+        {{technical_standard|markdown}}  
+
+	</div>
+	<div class="tab-pane fade" id="jmeter">
+		
+
+	</div>
+	<div class="tab-pane fade" id="ejb">
+		<p>
+		</p>
+	</div>
+</div>
+</div>
+{% endblock %}

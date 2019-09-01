@@ -1,0 +1,92 @@
+{% extends 'layout.html' %}
+{% block content %}
+<style>
+.square{
+    width:95%; 
+    background:#fff;    
+    border:2px #ccc solid;  /*边框*/
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<div class="col-md-1 column">
+                              
+</div> 
+<div class="col-md-10 column square" >
+<div style="padding-left:2px;" > <h4> 按用户查询 </h4>  </div> 
+<form action='' method='post' >  
+	{% csrf_token %}
+    <div class="input-group">
+        <span class="input-group-addon label-info">选项</span>
+        <select name="name" class="form-control" required>
+            {% for i in name_list %}
+                <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select>
+    </div><br>
+	<button class="btn btn-lg btn-danger btn-block" type="submit">查询</button><br>
+
+</form><br>
+
+<div style="padding-left:2px;" > <h4> 按五分制查询 </h4>  </div>
+<form action='' method='post' >  
+	{% csrf_token %}
+    <div class="input-group">
+        <span class="input-group-addon label-info">选项</span>
+        <select name="abcde" class="form-control" required>
+            {% for k,v in choices.items %}
+                <option value="{{ k }}">{{ v }}</option>
+            {% endfor %}
+        </select>
+    </div><br>
+	<button class="btn btn-lg btn-danger btn-block" type="submit">查询</button><br>
+
+</form><br>
+
+<div style="padding-left:2px;" > <h4> 按{{title}}查询 </h4>  </div>
+<form action='' method='post' >  
+    {% csrf_token %}
+    <div class="input-group">
+        <span class="input-group-addon label-info">选项</span>
+        <select name="title" class="form-control" required>
+            {% for k,v in title_choices.items %}
+                <option value="{{ k }}">{{ v }}</option>
+            {% endfor %}
+        </select>
+    </div><br>
+    <button class="btn btn-lg btn-danger btn-block" type="submit">查询</button><br>
+
+</form><br>
+
+<div style="padding-left:2px;" > <h4> 复合查询 </h4>  </div>
+<form action='' method='post' >  
+    {% csrf_token %}
+    <div class="input-group">
+        
+        <span class="input-group-addon label-info">5分制选项</span>
+        <select name="abcde_5" class="form-control" required>
+            {% for k,v in abcde_choices.items %}
+                <option value="{{ k }}">{{ v }}</option>
+            {% endfor %}
+        </select>
+
+        <span class="input-group-addon label-info">百分比(大于等于)选项</span>
+        <select name="per" class="form-control" required>
+            {% for k,v in per_choices.items %}
+                <option value="{{ k }}">{{ v }}</option>
+            {% endfor %}
+        </select>
+    </div><br>
+    <button class="btn btn-lg btn-danger btn-block" type="submit">查询</button><br>
+
+</form><br>
+
+
+
+
+
+
+</div>
+
+{% endblock %}

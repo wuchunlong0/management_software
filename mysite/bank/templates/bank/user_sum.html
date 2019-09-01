@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.2.1/echarts-en.js"></script>
+    <div style="padding-left:138px;"><h3> {{title}}</h3></div> 
+    <div style="padding-left:180px;"><h4> 总评结果({{meg}})：{{overallAppraisal}}</h4></div> 
+    
+    <div id="main" style="width: 600px;height:400px;"></div>
+    <script type="text/javascript">
+        var myChart = echarts.init(document.getElementById('main'));
+		myChart.setOption({ 
+    		series: [{name: '业务指标', type: 'gauge', data: {{data|safe}} }]
+		})
+    </script>
+
+<hr>
+{% include 'bank/abcde_standard.html' %}
+
+{% endblock %}

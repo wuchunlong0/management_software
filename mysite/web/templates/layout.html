@@ -1,0 +1,149 @@
+{% load staticfiles %}
+{% load rbac %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>银行管理系统</title>
+    <link rel="shortcut icon" href="{% static 'imgs/bank.jpg' %} ">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"> 
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="{% static 'css/commons.css' %} "/>
+    <link rel="stylesheet" href="{% static 'css/nav.css' %} "/>
+    <link rel="stylesheet" href="{% static 'rbac/css/rbac.css' %} "/>
+    
+
+    <style>
+        body {
+            margin: 0;
+        }
+
+        .no-radius {
+            border-radius: 0;
+        }
+
+        .no-margin {
+            margin: 0;
+        }
+
+        .pg-body > .left-menu {
+            background-color: #EAEDF1;
+            position: absolute;
+            left: 1px;
+            top: 48px;
+            bottom: 0;
+            width: 220px;
+            border: 1px solid #EAEDF1;
+            overflow: auto;
+        }
+
+        .pg-body > .right-body {
+            position: absolute;
+            left: 225px;
+            right: 0;
+            top: 48px;
+            bottom: 0;
+            overflow: scroll;
+            border: 1px solid #ddd;
+            border-top: 0;
+            font-size: 13px;
+            min-width: 755px;
+        }
+
+        .navbar-right {
+            float: right !important;
+            margin-right: -15px;
+        }
+
+        .luffy-container {
+            padding: 15px;
+        }
+
+    </style>
+
+    {% block css %}{% endblock %}
+
+</head>
+<body>
+<div class="pg-header">
+    <div class="nav">
+        <div class="logo-area left ">
+            <a href="#">
+                <img class="logo" src="{% static 'imgs/bank.jpg' %}">
+                <span style="font-size: 18px;">银行管理系统 </span>
+            </a>
+        </div>
+
+        <div class="left-menu left">
+            <a href="{% url 'bank_index' %}" class="menu-item"><i aria-hidden="true" class="fa fa-home"></i> 首页</a>
+                                                           
+            <div class="menu-item">
+                <span><i aria-hidden="true" class="fa fa-file-word-o"></i> 分析报告</span>
+                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                <div class="more-info">
+                    <a href="{% url 'analysis_report' %}" class="more-item"><p1>生成分析报告</p></a>
+                    <a href="{% url 'down_analysis_report' %}" class="more-item">下载分析报告</a>
+                    <a href="{% url 'upload_word_tpl' %}" class="more-item">上传Word模板</a>
+                    
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <span><i aria-hidden="true" class="fa fa-question-circle-o"></i> 帮助</span>
+                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                <div class="more-info">
+                    <a href="/bank/help/menu" class="more-item">菜单管理</a>
+                    
+                </div>
+            </div>
+            <a href="{% url 'contactus' %}" class="menu-item"><i aria-hidden="true" class="fa fa-handshake-o"></i> 联系我们</a>     
+        </div>
+
+        <div class="right-menu right clearfix">
+            <p2><i aria-hidden="true" class="fa fa-spin fa-spinner fa-2x"></i></p2> <!--动画-->
+            <div class="user-info right">
+                <a href="#" class="avatar">
+                    <img class="img-circle" src="{% static 'imgs/default.png' %}">
+                </a>
+
+                <div class="more-info">
+                    <a href="#" class="more-item">{{ user.username}}</a>
+                    <a href="/logout/" class="more-item">注销</a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<div class="pg-body">
+    <div class="left-menu">
+        <div class="menu-body">
+            {% multi_menu request %}
+        </div>
+    </div>
+    <div class="right-body">
+        <div>
+            {% breadcrumb request %}
+        </div>
+        {% block content %} {% endblock %}
+    </div>
+</div>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script> 
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="{% static 'rbac/js/rbac.js' %} "></script>
+
+<script>
+$(document).ready(function(){
+  $("p2").hide();
+  $("p1").click(function(){
+    $("p2").show();
+    //$("p1").hide();
+  });
+});
+</script>
+{% block js %} {% endblock %}
+</body>
+</html>

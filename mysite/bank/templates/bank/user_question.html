@@ -1,0 +1,82 @@
+{% extends 'layout.html' %}
+{% block content %}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.2.1/echarts-en.js"></script>
+	<div style="padding-left:150px;"><h3>{{title}}</h3> </div>     
+    
+    <div style="padding-left:6px;"><h5>一、柱状图显示<br> X轴-问卷题序号 Y轴-五分制评判结果</h5></div>
+    <div id="main" style="width: 1160px;height:400px;"></div>
+    <script type="text/javascript">
+        var myChart = echarts.init(document.getElementById("main"));
+       
+        myChart.setOption({
+        	color: ['#3398DB'],
+    		tooltip : {
+        	trigger: 'axis',
+        	axisPointer : {     // 坐标轴指示器，坐标轴触发有效
+            	type : 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+        	}
+    	},
+    	grid: {
+        	left: '3%',
+        	right: '4%',
+        	bottom: '3%',
+        	containLabel: true
+    	},
+    	xAxis : [
+        	{
+            	type : 'category',
+            	data : {{dataX|safe}},
+            	axisTick: {
+                	alignWithLabel: true
+            	}
+        	}
+    	],
+    	yAxis : [
+        	{
+            	type : 'value'
+        	}
+    	],
+        series : [
+        	{
+            	name: '平均得分',
+            	type: 'bar',
+            	barWidth: '60%',
+            	data: {{data|safe}}
+        	}
+        ]})
+        
+    </script>
+
+    <hr>
+    <div style="padding-left:6px;"><h5>二、表格显示</h5></div>    
+    
+            <table class="table  table-bordered">
+                <thead>
+                    <tr>   <!-- bootstrap 12等份 -->
+                        <th class="col-md-1">X轴</th>
+                        <th class="col-md-5">标题</th>
+                        <th class="col-md-1">答卷人姓名</th>      
+                        <th class="col-md-1">得分</th>
+                        
+                                       
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for b in Bankuser_list %}  
+                        <tr>
+                            <td>{{forloop.counter0 }} </td>
+                            <td>{{b.ask}} </td>
+                            <td> {{name}} </td>
+                            <td>{{b.reply}}</td>                             
+                        </tr>
+                        
+                    {% endfor %}
+
+                </tbody>
+            </table>
+
+    <hr>
+    <div style="padding-left:6px;"><h5>三、五分制评判对应关系</h5></div>
+    {% include 'bank/abcde.html' %}
+
+{% endblock %}

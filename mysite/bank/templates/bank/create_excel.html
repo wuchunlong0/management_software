@@ -1,0 +1,92 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="col-md-10 mymiddle-column-home">	
+
+    <form method="post" action="">
+        {% csrf_token %}
+        <input type="text" class="form-control" value="" name="" style="display:none"/>
+        <button class="btn btn-lg btn-info" type="submit" > 保存为Excel </button>
+    </form>
+
+	{% for mydict in all_abcde %}
+		<div style="padding-left:0px;color:#3ACC3A;"><h5>按人数统计 表{{ forloop.counter }}: </h5> </div> 
+		{% for title,all_abcde in mydict.items %}
+            <div style="padding-left:200px;"><h3>{{title}} </h3> </div> 
+            <table class="table table-bordered">
+                <thead>
+                    <tr>   <!-- bootstrap 12等份 -->
+                        <th class="col-md-1">编号</th>
+                        <th class="col-md-5">标题</th>
+                        <th class="col-md-1">人数</th>      
+                        <th class="col-md-1">A</th>
+                        <th class="col-md-1">B</th>
+                        <th class="col-md-1">C</th>
+                        <th class="col-md-1">D</th>
+                        <th class="col-md-1">E</th>
+                                       
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for w in all_abcde %}  
+                        <tr>
+                            <td>{{w.id}} </td>
+                            <td>{{w.title}} </td>
+                            <td>{{w.sum}} </td>
+                            <td>{{w.a}} </td>
+                            <td>{{w.b}} </td>                     
+                            <td>{{w.c}} </td>
+                            <td>{{w.d}} </td>
+                            <td>{{w.e}} </td>
+                            
+                        </tr>
+                        
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        {% endfor %}
+        <hr><br>
+    {% endfor %}
+    <hr><br>
+    {% for mydict in all_abcde_per %}
+		<div style="padding-left:0px;"><h5>按百分比统计 表{{ forloop.counter }}: </h5> </div> 
+		{% for title,all_abcde in mydict.items %}
+            <div style="padding-left:200px;"><h3>{{title}} </h3> </div> 
+            <table class="table table-bordered">
+                <thead>
+                    <tr>   <!-- bootstrap 12等份 -->
+                        <th class="col-md-1">编号</th>
+                        <th class="col-md-7">标题</th>
+                        <th class="col-md-1">人数</th>      
+                        <th class="col-md-1">A</th>
+                        <th class="col-md-1">B</th>
+                        <th class="col-md-1">C</th>
+                        <th class="col-md-1">D</th>
+                        <th class="col-md-1">E</th>
+                                       
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for w in all_abcde %}  
+                        <tr>
+                            <td>{{w.id}} </td>
+                            <td>{{w.title}} </td>
+                            <td>{{w.sum}} </td>
+                            <td>{{w.a}}% </td>
+                            <td>{{w.b}}% </td>                     
+                            <td>{{w.c}}% </td>
+                            <td>{{w.d}}% </td>
+                            <td>{{w.e}}% </td>
+                            
+                        </tr>
+                        
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        {% endfor %}
+        <hr><br>
+    {% endfor %}
+</div>             
+    
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'layout.html' %}
+
+
+{% block content %}
+    <div class="luffy-container">
+        <div class="btn-group" style="margin: 5px 0">
+
+            <a class="btn btn-default" href="{% url 'rbac:permission_add' %}">
+                <i class="fa fa-plus-square" aria-hidden="true"></i> 添加权限
+            </a>
+            <!-- <a class="btn btn-default" href="">
+                <i class="fa fa-file-excel-o" aria-hidden="true"></i> 批量导入
+            </a> -->
+
+        </div>
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>标题</th>
+                <th>URL</th>
+                <th>别名</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in permissions %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>                   
+                    <td>{{ row.title }}</td>
+                    <td>{{ row.url }}</td>
+                    <td>{{ row.name }}</td>
+                    <td>
+
+                        <a style="color: #333333;" href="{% url 'rbac:permission_edit' pk=row.id %}">
+                            <i class="fa fa-edit" aria-hidden="true"></i></a>
+
+
+                        <a style="color: #d9534f;" href="{% url 'rbac:permission_del' pk=row.id %}"><i
+                                class="fa fa-trash-o"></i></a>
+
+                    </td>                    
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

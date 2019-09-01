@@ -1,0 +1,67 @@
+{% extends 'layout.html' %}
+{% block content %}
+<style>
+.square{
+    width:95%; 
+    background:#fff;    
+    border:2px #ccc solid;  /*边框*/
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<div class="col-md-1 column">
+                              
+</div> 
+<div class="col-md-10 column square" >
+<div style="padding-left:2px;" > <h4> 设置阀值 若设置阀值100%绝对无输出 实际值大于设置阀值有输出</h4></div> 
+<form action='' method='post' >  
+	{% csrf_token %}
+    <div class="input-group">
+        <span class="input-group-addon label-info">选项 百分比% A 非常差</span>
+        <select name="a_per" class="form-control" required>
+            {% for i in per_list %}
+                <option value="{{ i }}">{{ i }}%</option>
+            {% endfor %}
+        </select>
+    </div><br>
+    <div class="input-group">
+        <span class="input-group-addon label-info">选项 百分比% B 较差</span>
+        <select name="b_per" class="form-control" required>
+            {% for i in per_list %}
+                <option value="{{ i }}">{{ i }}%</option>
+            {% endfor %}
+        </select>
+    </div><br>
+    <div class="input-group">
+        <span class="input-group-addon label-info">选项 百分比% C 一般</span>
+        <select name="c_per" class="form-control" required>
+            {% for i in per_list %}
+                <option value="{{ i }}">{{ i }}%</option>
+            {% endfor %}
+        </select>
+    </div><br>
+    <div class="input-group">
+        <span class="input-group-addon label-info">选项 百分比% D 敬业</span>
+        <select name="d_per" class="form-control" required>
+            {% for i in per_list %}
+                <option value="{{ i }}">{{ i }}%</option>
+            {% endfor %}
+        </select>
+    </div><br>
+    <div class="input-group">
+        <span class="input-group-addon label-info">选项 百分比% E 非常敬业</span>
+        <select name="e_per" class="form-control" required>
+            {% for i in per_list %}
+                <option value="{{ i }}">{{ i }}%</option>
+            {% endfor %}
+        </select>
+    </div><br>
+
+	<button class="btn btn-lg btn-danger btn-block" type="submit">提 交</button><br>
+
+</form><br>
+
+</div>
+
+{% endblock %}

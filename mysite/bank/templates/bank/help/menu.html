@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div style="background:#fcfcfc; padding-left:38px;">
+	{% load markdown_deux_tags %}
+	{% for title in title_yield %}			       
+        <div  style="color:#000; font-size:16px;">
+			
+			{{title|markdown}} 
+		</div>										
+			
+		{% if forloop.counter < 10 %}
+			<img src="/static/menu/f0{{ forloop.counter}}.png" width="750"  /> 
+        {% else %}
+            <img src="/static/menu/f{{ forloop.counter}}.png" width="750"  /> 
+
+        {% endif%}<br>
+
+    {% endfor %}
+</div>	
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js" ></script>
+<script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" ></script>
+<script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" ></script>
+<link rel="stylesheet" type="text/css" href="/static/bank/css/style.css" />
+
+<div class="w3_content_agilleinfo_inner">
+    <div class="agile_featured_movies">
+        <div class="inner-agile-w3l-part-head">
+            <h3 class="w3l-inner-h-title">Contact</h3>
+            <p class="w3ls_head_para">Add short Description</p>
+        </div>
+        <div class="w3_mail_grids">
+            <form action="{% url 'contactus' %}" method='post' >
+                {% csrf_token %} 
+                <div class="col-md-6 w3_agile_mail_grid">
+                    <span class="input input--ichiro">
+                        <input name="name" type="text" class="form-control" required="required" pattern="[\u4e00-\u9fa5]{2,}" placeholder="请输入真实姓名">
+                        <div class="invalid-feedback">必须是中文，且大于2个汉字！</div>
+                    </span>
+
+                    <span class="input input--ichiro">
+                        <input type="email" class="form-control" required="required"  placeholder="输入邮箱">
+                        <div class="invalid-feedback">必须是邮箱格式！</div>
+                    </span>
+
+                    <span class="input input--ichiro">
+                        <input name="tel" type="text" class="form-control" required="required" pattern="1[34578]\d{9}$" placeholder="请输入手机号码">
+                        <div class="invalid-feedback">手机号只能是11位的数字！</div>
+                    </span>
+                                        
+                </div>
+                <div class="col-md-6 w3_agile_mail_grid two">
+                    <textarea  name="content" class="form-control"  required="required" placeholder="留言内容" pattern="1[34578]\d{9}$"></textarea>                                       
+                </div>
+        
+                <input type="submit" value="Submit">
+            </form>
+
+            <div class="agileits-get-us">
+                <ul>
+                    <li><i class="fa fa-map-marker" aria-hidden="true" ></i><a href="https://xin.baidu.com/detail/compinfo?pid=xlTM-TogKuTwJxWYIYXgkAQyvZpdS6otEgmd&from=ps&tab=basic&fl=1&castk=LTE%3D"> 中国 上海鑫相信息科技有限公司</a></li>
+                    <li><i class="fa fa-phone" aria-hidden="true"></i>  +86 134 0255 3918</li>
+                    <li><i class="fa fa-envelope" aria-hidden="true"></i><a href="https://outlook.live.com/"> wu-chun-long@outlook.com</a></li>
+                </ul>
+                                
+            </div>
+                    
+        </div>
+    </div>                          
+</div>
+
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>   
+                <th class="col-md-1">序号</th>
+                <th class="col-md-2">邮箱</th>
+                <th class="col-md-2">电话</th>      
+                <th class="col-md-2">微信</th>
+                <th class="col-md-5">备注</th>                                      
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td> 1 </td><td> wcl6005@126.com </td><td> 134 0255 3918 </td><td> 134 0255 3918</td><td> 工作时间：08：00 - 21：00</td></tr>
+            <tr><td> 2 </td><td> *****@outlook.com </td><td> 189 1356 9868 </td><td> ********</td><td> 工作时间：08：00 - 21：00</td></tr>
+                   
+        </tbody>
+    </table>
+
+
+{% endblock %}

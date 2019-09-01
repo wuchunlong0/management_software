@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.2.1/echarts-en.js"></script>
+    
+    <div style="padding-left:30px;"><h3> {{title}}</h3></div> 
+    <div style="padding-left:190px;"><h4> 总体评价：{{overallAppraisal}}</h4></div> 
+    
+    <div id="main" style="width: 600px;height:400px;"></div>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+ 
+        myChart.setOption({
+            
+            //下载图片
+            toolbox: {
+    　　　　     show: true,
+    　　        feature: {
+    　　　　        saveAsImage: {
+    　　　　          show:true,
+    　　　　           excludeComponents :['toolbox'],
+    　　　　           pixelRatio: 2
+    　　　　        }
+    　　        }
+            },
+
+
+            series : [{
+                name: '访问来源',
+                type: 'pie',
+                radius: '55%',
+                data: {{data|safe}}
+            }]
+        })
+ 
+    </script>
+
+   {% include 'bank/abcde_standard.html' %}
+   
+{% endblock %}
