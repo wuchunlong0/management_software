@@ -4,8 +4,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>银行管理系统</title>
-    <link rel="shortcut icon" href="{% static 'imgs/bank.jpg' %} ">
+    <title>江西辙炜管理系统</title>
+    <link rel="shortcut icon" href="{% static 'imgs/bank.jpeg' %} ">
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"> 
     <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
     <link rel="stylesheet" href="{% static 'css/commons.css' %} "/>
@@ -69,24 +69,13 @@
     <div class="nav">
         <div class="logo-area left ">
             <a href="#">
-                <img class="logo" src="{% static 'imgs/bank.jpg' %}">
-                <span style="font-size: 18px;">银行管理系统 </span>
+                <img class="logo" src="{% static 'imgs/bank.jpeg' %}">
+                <span style="font-size: 18px;">江西辙炜管理系统 </span>
             </a>
         </div>
 
         <div class="left-menu left">
-            <a href="{% url 'bank_index' %}" class="menu-item"><i aria-hidden="true" class="fa fa-home"></i> 首页</a>
-                                                           
-            <div class="menu-item">
-                <span><i aria-hidden="true" class="fa fa-file-word-o"></i> 分析报告</span>
-                <i class="fa fa-caret-down" aria-hidden="true"></i>
-                <div class="more-info">
-                    <a href="{% url 'analysis_report' %}" class="more-item"><p1>生成分析报告</p></a>
-                    <a href="{% url 'down_analysis_report' %}" class="more-item">下载分析报告</a>
-                    <a href="{% url 'upload_word_tpl' %}" class="more-item">上传Word模板</a>
-                    
-                </div>
-            </div>
+            <a href="{% url 'bank_index' %}" class="menu-item"><i aria-hidden="true" class="fa fa-home"></i> 首页</a>           
 
             <div class="menu-item">
                 <span><i aria-hidden="true" class="fa fa-question-circle-o"></i> 帮助</span>
@@ -96,7 +85,7 @@
                     
                 </div>
             </div>
-            <a href="{% url 'contactus' %}" class="menu-item"><i aria-hidden="true" class="fa fa-handshake-o"></i> 联系我们</a>     
+                
         </div>
 
         <div class="right-menu right clearfix">

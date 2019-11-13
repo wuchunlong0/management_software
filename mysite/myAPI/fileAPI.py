@@ -13,6 +13,26 @@ IndexError: list index out of range
 >>> 
 '''
 import json
+from django.http.response import StreamingHttpResponse
+    
+# 迭代 读大文件 应用：accountTest/views.py   保存为Excel函数def makexlsx(request) 调用此函数
+def file_iterator(file_name, chunk_size=512):
+    try:
+        with open(file_name, 'rb') as f:   #python3   'rb'读二进制文件
+            while True:
+                c = f.read(chunk_size)
+                if c: yield c                   
+                else: break #return  okokok   
+    except Exception as ex:
+        yield ''       
+
+
+def downfile(tempFilePath, fileName):
+    response = StreamingHttpResponse(file_iterator(tempFilePath))#改调用 迭代读文件
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename="{0}"'.format(fileName)
+    return response
+
 
 def readJson(filepath):
     """读json格式文件"""

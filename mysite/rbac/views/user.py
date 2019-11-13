@@ -11,7 +11,7 @@ from django.urls import reverse
 from rbac import models
 from rbac.forms.user import UserModelForm, UpdateUserModelForm, ResetPasswordUserModelForm
 from myAPI.downfileAPI import down_file
-from myAPI.excelAPI import post_excel_model, post_excel_model_name
+from myAPI.excelAPI import post_excel_model_names
 from django.forms.models import model_to_dict
 
 def user_list(request):
@@ -81,15 +81,15 @@ def user_del(request, pk):
     models.UserInfo.objects.filter(id=pk).delete()
     return redirect(cancel)
 
-
 def user_import(request):
     """用户批量导入"""
     if request.method == 'GET':
         return render(request, 'rbac/user_import.html')     
     k = ['name', 'password', 'email']    
-    if post_excel_model_name(request, 'user_excel', models.UserInfo, k):
-        return redirect(reverse('rbac:user_list'))    
-    context = {'status': False, 'msg': '导入失败'}    
+
+    context = {'status': True, 'msg': '导入成功'} \
+    if post_excel_model_names(request, 'user_excel', models.UserInfo, k) \
+    else {'status': False, 'msg': '导入失败'}       
     return render(request, 'rbac/user_import.html', context)
 
 def user_tpl(request):

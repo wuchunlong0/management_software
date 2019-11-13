@@ -1,0 +1,93 @@
+{% extends 'layout.html' %}
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.2.1/echarts-en.js"></script>
+
+<div class="col-md-12 column text-center"> <h4>{{title}}</h4> </div>
+
+<div class="col-md-12 column text-center">
+    <div id="main" style="width: 1160px;height:400px;"></div>
+    <script type="text/javascript">
+        var myChart = echarts.init(document.getElementById("main"));      
+        myChart.setOption({
+            //下载图片
+            toolbox: {
+    　　　　     show: true,
+    　　        feature: {
+    　　　　        saveAsImage: {
+    　　　　          show:true,
+    　　　　           excludeComponents :['toolbox'],
+    　　　　           pixelRatio: 2
+    　　　　        }
+    　　        }
+            },
+
+        	color: ['#3398DB'],
+    		tooltip : {
+        	   trigger: 'axis',
+        	   axisPointer : {     // 坐标轴指示器，坐标轴触发有效
+                type : 'line' // 默认为直线，可选为：'line' | 'shadow'
+        	   }
+    	    },
+    	    grid: {
+                left: '3%',
+        	   right: '4%',
+        	   bottom: '3%',
+        	   containLabel: true
+    	    },
+    	    xAxis : [
+        	    {
+            	   type : 'category',
+            	   data : {{dataX|safe}},
+            	   axisTick: {
+                	   alignWithLabel: true
+            	   }
+        	    }
+    	    ],
+    	    yAxis : [
+        	    {
+            	   type : 'value'
+        	    }
+    	    ],
+            series : [
+        	   {
+            	   name: '{{name}}',
+            	   type: 'bar',
+            	   barWidth: '60%',
+            	   data: {{data|safe}}
+        	    }
+            ]})       
+    </script>
+
+    <div class="text-center"> {{x_y_meg|safe}} </div>
+    <hr>
+    <div class="text-center"> <h4>客户数据列表</h4> </div>	    
+            <table class="table table-bordered">
+                <thead>
+                    <tr>   <!-- bootstrap 12等份 -->
+                        <th class="col-md-1">序号</th>
+                        <th class="col-md-5">客户名称</th>
+                        <th class="col-md-2">毛利(元)</th>
+                        <th class="col-md-2">费用(元)</th>
+                        <th class="col-md-2">利润总额(元)</th>
+                        
+                                       
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for b in mylist %}  
+                        <tr>
+                            <td>{{forloop.counter0 }}  </td>
+                            <td>{{b.name}} </td>
+                            <td>{{b.pgross_profit_list}} </td>
+                            <td>{{b.total_expenses_list}} </td>
+                            <td>{{b.profit_list}} </td>
+                            
+                        </tr>
+                        
+                    {% endfor %}
+
+                </tbody>
+            </table>  
+</div>
+  
+{% endblock %}

@@ -5,7 +5,7 @@ import django
 import random
 import datetime
 
-user_num = 1 #初始化用户数
+user_num = 3 #初始化用户数
 
 # 登录用户 初始化
 roots = []
@@ -18,15 +18,14 @@ for i in range(1,user_num+1):
         roots.append(['root%s' %i,'123','user@1.com','普通用户'])
 
 
+
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
     django.setup()
 
     from django.contrib.auth.models import User, Group, Permission
     from rbac.models import UserInfo, Role, Permission, Menu 
-    from web.models import Customer, Payment    
-    from bank.models import  Setvalue
-    
+    from web.models import Customer, Payment   
     isname = User.objects.filter(username = 'admin')
     if isname:
         user = User.objects.get(username='admin')
@@ -36,50 +35,125 @@ if __name__ == "__main__":
         User.objects.create_superuser('admin', 'admin@test.com','admin')
     
     #print('===='+os.getcwd()) #当前目录
-    if os.path.exists("mysite/web/files/AnalysisReport.docx"):
-        os.remove("mysite/web/files/AnalysisReport.docx") #删除分析报告文件
-        print("del mysite/web/files/AnalysisReport.docx") 
     
     # 菜单 初始化 *个菜单
-    menulist = ['HOME','问卷管理','客户管理','信息管理','角色管理','用户管理','菜单管理','权限管理','单元测试']
+    menulist = ['HOME','采购管理','财务管理','客户管理','信息管理','角色管理','用户管理','菜单管理','权限管理']
     for i in menulist:
         m = Menu()
         m.title = i
         m.save()
     
-    # 权限 初始化 *个权限  
+    # 权限 初始化 *个权限   
     perlistdict = [['HOME',['test','/bank/test/test/','test_test']],\
                    ['HOME',['首页','/bank/index/','bank_index']],\
                    ['',['帮助文档','/bank/help/(.+)','help']],\
-                   ['',['联系我们','/bank/contactus/','contactus']],\
-                   ['问卷管理',['上传问卷Excel','/bank/questionnaire/import/','questionnaire_import']],\
-                   ['问卷管理',['问卷调查题库','/bank/inquire/into/','inquire_into']],\
-                   ['问卷管理',['问卷查询','/bank/user/questionnaire/(.+)','user_questionnaire']],\
-                   ['问卷管理',['数据统计保存为Excel','/bank/create/excel/','create_excel']],\
-                   ['问卷管理',['总体评价','/bank/overall/evaluation/','overall_evaluation']],\
-                   ['问卷管理',['问卷图表显示','/bank/all/investigation/','all_investigation']],\
-                   ['问卷管理',['问卷图表显示排名','/bank/all/investigationRanking/','all_investigationRanking']],\
-                   ['问卷管理',['设置阀值','/bank/setting/value/','setting_value/']],\
-                   ['问卷管理',['显示阀值','/bank/setting/list/','setting_list/']],\
-                   ['',['生成分析报告文件','/bank/analysis/report/','analysis_report']],\
-                   ['问卷管理',['下载问卷模板','/bank/questionnaire/tpl/','questionnaire_tpl']],\
-                   ['',['下载分析报告','/bank/down/analysisReport/','down_analysis_report']],\
-                   ['',['上传文件','/bank/upload/','upload_word_tpl']],\
-                   ['',['下载文件','/bank/download/','download_word_tpl']],\
+                    ['',['上传文件','/bank/upload/','upload_word_tpl']],\
+                    ['',['下载文件','/bank/download/','download_word_tpl']],\
                    
-                   ['客户管理',['客户列表','/customer/list/','customer_list']],\
-                   ['客户管理',['添加客户','/customer/add/','customer_add']],\
-                   ['',['删除客户','/customer/del/(?P<cid>\d+)/$','customer_del']],\
-                   ['',['修改客户','/customer/edit/(?P<cid>\d+)/$','customer_edit']],\
-                   ['客户管理',['批量导入','/customer/import/','customer_import']],\
-                   ['客户管理',['下载模板','/customer/tpl/','customer_tpl']],\
+                   ['采购管理',['采购列表','/web/purchase/list/(.+)','purchase_list']],\
+                   ['',['添加采购','/web/purchase/add/','purchase_add']],\
+                   ['',['删除采购','/web/purchase/del/(?P<cid>\d+)/$','purchase_del']],\
+                   ['',['修改采购','/web/purchase/edit/(?P<cid>\d+)/$','purchase_edit']],\
+                   ['',['批量采购导入','/web/purchase/import/','purchase_import']],\
+                   ['',['下载采购模板','/web/purchase/tpl/','purchase_tpl']],\
                    
+                   ['财务管理',['送货列表','/web/delivery/list/(.+)','delivery_list']],\
+                   ['',['添加送货','/web/delivery/add/','delivery_add']],\
+                   ['',['修改送货','/web/delivery/edit/(?P<cid>\d+)/$','delivery_edit']],\
+                   ['',['删除送货','/web/delivery/del/(?P<cid>\d+)/$','delivery_del']],\
+                   ['',['批量导入送货','/web/delivery/import/','delivery_import']],\
+                   ['',['下载送货模板','/web/delivery/tpl/','delivery_tpl']],\
                    
+                   ['',['下载送货单页电子表格','/web/makexlsx/page/(.+)','makexlsx_page']],\
+                   ['',['下载送货全部电子表格','/web/makexlsx/all/(.+)','makexlsx_all']],\
                    
-                   ['信息管理',['账单列表','/payment/list/','payment_list']],\
-                   ['信息管理',['添加账单','/payment/add/','payment_add']],\
-                   ['',['删除账单','/payment/del/(?P<cid>\d+)/$','payment_del']],\
-                   ['',['修改账单','/payment/edit/(?P<cid>\d+)/$','payment_edit']],\
+                   ['',['批量导入销售成本','/web/cost/import/','cost_import']],\
+                   ['财务管理',['销售成本列表','/web/cost/list/(.+)','cost_list']],\
+                   ['',['添加销售成本','/web/cost/add/','cost_add']],\
+                   ['',['修改销售成本','/web/cost/edit/(?P<cid>\d+)/$','cost_edit']],\
+                   ['',['删除销售成本','/web/cost/del/(?P<cid>\d+)/$','cost_del']],\
+                   ['',['销售成本利润图形','/web/profit/graph/','profit_graph']],\
+                   
+                   ['',['下载销售成本单页电子表格','/web/cost/makexlsx/page/(.+)','cost_makexlsx_page']],\
+                   ['',['下载销售成本全部电子表格','/web/cost/makexlsx/all/(.+)','cost_makexlsx_all']],\
+                   
+                                      
+                   ['',['批量导入应付账款','/web/copewith/import/','copewith_import']],\
+                   ['',['下载应付账款模板','/web/copewith/tpl/','copewith_tpl']],\
+                   ['财务管理',['应付账款列表','/web/copewith/list/(.+)','copewith_list']],\
+                   ['',['添加应付账款','/web/copewith/add/','copewith_add']],\
+                   ['',['修改应付账款','/web/copewith/edit/(?P<cid>\d+)/$','copewith_edit']],\
+                   ['',['删除应付账款','/web/copewith/del/(?P<cid>\d+)/$','copewith_del']],\
+                   ['',['下载应付账款单页电子表格','/web/copewith/makexlsx/page/(.+)','copewith_makexlsx_page']],\
+                   ['',['下载应付账款全部电子表格','/web/copewith/makexlsx/all/(.+)','copewith_makexlsx_all']],\
+                   
+                    ['',['批量导入应收账款','/web/receivable/import/','receivable_import']],\
+                    ['',['下载应收账款模板','/web/receivable/tpl/','receivable_tpl']],\
+                    ['财务管理',['应收账款列表','/web/receivable/list/(.+)','receivable_list']],\
+                    ['',['添加应收账款','/web/receivable/add/','receivable_add']],\
+                    ['',['修改应收账款','/web/receivable/edit/(?P<cid>\d+)/$','receivable_edit']],\
+                    ['',['删除应收账款','/web/receivable/del/(?P<cid>\d+)/$','receivable_del']],\
+                   ['',['下载应收账款单页电子表格','/web/receivable/makexlsx/page/(.+)','receivable_makexlsx_page']],\
+                   ['',['下载应收账款全部电子表格','/web/receivable/makexlsx/all/(.+)','receivable_makexlsx_all']],\
+
+
+                    ['',['批量导入材料报表','/web/materialreport/import/','materialreport_import']],\
+                    ['',['下载材料报表模板','/web/materialreport/tpl/','materialreport_tpl']],\
+                    ['财务管理',['材料报表列表','/web/materialreport/list/(.+)','materialreport_list']],\
+                    ['',['添加材料报表','/web/materialreport/add/','materialreport_add']],\
+                    ['',['修改材料报表','/web/materialreport/edit/(?P<cid>\d+)/$','materialreport_edit']],\
+                    ['',['删除材料报表','/web/materialreport/del/(?P<cid>\d+)/$','materialreport_del']],\
+                    ['',['下载材料报表单页电子表格','/web/materialreport/makexlsx/page/(.+)','materialreport_makexlsx_page']],\
+                    ['',['下载材料报表全部电子表格','/web/materialreport/makexlsx/all/(.+)','materialreport_makexlsx_all']],\
+
+                    ['',['批量导入产销存报表','/web/salesreport/import/','salesreport_import']],\
+                    ['',['下载产销存报表模板','/web/salesreport/tpl/','salesreport_tpl']],\
+                    ['财务管理',['产销存列表','/web/salesreport/list/(.+)','salesreport_list']],\
+                    ['',['添加产销存报表','/web/salesreport/add/','salesreport_add']],\
+                    ['',['修改产销存报表','/web/salesreport/edit/(?P<cid>\d+)/$','salesreport_edit']],\
+                    ['',['删除产销存报表','/web/salesreport/del/(?P<cid>\d+)/$','salesreport_del']],\
+                    ['',['下载产销存报表单页电子表格','/web/salesreport/makexlsx/page/(.+)','salesreport_makexlsx_page']],\
+                    ['',['下载产销存报表全部电子表格','/web/salesreport/makexlsx/all/(.+)','salesreport_makexlsx_all']],\
+
+                    ['',['批量导入领料汇总','/web/picking/import/','picking_import']],\
+                    ['',['下载领料汇总模板','/web/picking/tpl/','picking_tpl']],\
+                    ['财务管理',['领料汇总列表','/web/picking/list/(.+)','picking_list']],\
+                    ['',['添加领料汇总','/web/picking/add/','picking_add']],\
+                    ['',['修改领料汇总','/web/picking/edit/(?P<cid>\d+)/$','picking_edit']],\
+                    ['',['删除领料汇总','/web/picking/del/(?P<cid>\d+)/$','picking_del']],\
+                    ['',['下载领料汇总单页电子表格','/web/picking/makexlsx/page/(.+)','picking_makexlsx_page']],\
+                    ['',['下载领料汇总全部电子表格','/web/picking/makexlsx/all/(.+)','picking_makexlsx_all']],\
+
+                    ['',['批量导入成品入库','/web/warehousing/import/','warehousing_import']],\
+                    ['',['下载成品入库模板','/web/warehousing/tpl/','warehousing_tpl']],\
+                    ['财务管理',['成品入库列表','/web/warehousing/list/(.+)','warehousing_list']],\
+                    ['',['添加成品入库','/web/warehousing/add/','warehousing_add']],\
+                    ['',['修改成品入库','/web/warehousing/edit/(?P<cid>\d+)/$','warehousing_edit']],\
+                    ['',['删除成品入库','/web/warehousing/del/(?P<cid>\d+)/$','warehousing_del']],\
+                    ['',['下载成品入库单页电子表格','/web/warehousing/makexlsx/page/(.+)','warehousing_makexlsx_page']],\
+                    ['',['下载成品入库全部电子表格','/web/warehousing/makexlsx/all/(.+)','warehousing_makexlsx_all']],\
+
+                    ['',['批量导入材料入库','/web/materialstorage/import/','materialstorage_import']],\
+                    ['',['下载材料入库模板','/web/materialstorage/tpl/','materialstorage_tpl']],\
+                    ['财务管理',['材料入库列表','/web/materialstorage/list/(.+)','materialstorage_list']],\
+                    ['',['添加材料入库','/web/materialstorage/add/','materialstorage_add']],\
+                    ['',['修改材料入库','/web/materialstorage/edit/(?P<cid>\d+)/$','materialstorage_edit']],\
+                    ['',['删除材料入库','/web/materialstorage/del/(?P<cid>\d+)/$','materialstorage_del']],\
+                    ['',['下载材料入库单页电子表格','/web/materialstorage/makexlsx/page/(.+)','materialstorage_makexlsx_page']],\
+                    ['',['下载材料入库全部电子表格','/web/materialstorage/makexlsx/all/(.+)','materialstorage_makexlsx_all']],\
+                   
+                                      
+                   ['客户管理',['客户列表','/web/customer/list/','customer_list']],\
+                   ['',['添加客户','/web/customer/add/','customer_add']],\
+                   ['',['删除客户','/web/customer/del/(?P<cid>\d+)/$','customer_del']],\
+                   ['',['修改客户','/web/customer/edit/(?P<cid>\d+)/$','customer_edit']],\
+                   ['',['批量导入','/web/customer/import/','customer_import']],\
+                   ['',['下载模板','/web/customer/tpl/','customer_tpl']],\
+                                    
+                   ['信息管理',['账单列表','/web/payment/list/','payment_list']],\
+                   ['',['添加账单','/web/payment/add/','payment_add']],\
+                   ['',['删除账单','/web/payment/del/(?P<cid>\d+)/$','payment_del']],\
+                   ['',['修改账单','/web/payment/edit/(?P<cid>\d+)/$','payment_edit']],\
                    
                     ['角色管理',['角色列表','/rbac/role/list/','role_list']],\
                     ['角色管理',['添加角色','/rbac/role/add/','role_add']],\
@@ -87,12 +161,12 @@ if __name__ == "__main__":
                     ['',['修改角色','/rbac/role/edit/(?P<cid>\d+)/$','role_edit']],\
                     
                     ['用户管理',['用户列表','/rbac/user/list/','user_list']],\
-                    ['用户管理',['添加用户','/rbac/user/add/','user_add']],\
+                    ['',['添加用户','/rbac/user/add/','user_add']],\
                     ['',['删除用户','/rbac/user/del/(?P<cid>\d+)/$','user_del']],\
                     ['',['修改用户','/rbac/user/edit/(?P<cid>\d+)/$','user_edit']],\
                     ['',['重置密码','/rbac/user/reset/password/(?P<cid>\d+)/$','user_reset_pwd']],\
-                    ['用户管理',['批量用户导入','/rbac/user/import/','user_import']],\
-                    ['用户管理',['下载用户模板','/rbac/user/tpl/','user_tpl']],\
+                    ['',['批量用户导入','/rbac/user/import/','user_import']],\
+                    ['',['下载用户模板','/rbac/user/tpl/','user_tpl']],\
                                         
                     ['菜单管理',['菜单列表','/rbac/menu/list/','menu_list']],\
                     ['菜单管理',['添加菜单','/rbac/menu/add/','menu_add']],\
@@ -113,10 +187,7 @@ if __name__ == "__main__":
                     ['',['删除权限','/rbac/menu/permission/del/(?P<pk>\d+)/$','menu_permission_del']],\
                     ['',['修改权限','/rbac/menu/permission/edit/(?P<pk>\d+)/$','menu_permission_edit']],\
                     ['',['批量删除权限','/rbac/multi/permissions/del/(?P<pk>\d+)/$','multi_permissions_del']],\
-                    
-                    
-                    ['单元测试',['问卷答题初始化','/bank/test/questionnaire/','test_questionnaire']],\
-                    
+                                        
                     
                    ]
     
@@ -129,32 +200,107 @@ if __name__ == "__main__":
             p.menu =  Menu.objects.get(title = d[0])
         p.save()
                 
-    # 角色 初始化 -- 3个角色(CEO、主管、普通用户) contactus
+    # 角色 初始化 -- 3个角色(CEO、主管、普通用户) 
     
     # CEO -- 具有所有权限 
     r = Role()
     r.title = 'CEO'
     r.save()    
     r = Role.objects.get(title = 'CEO') 
-    r.permissions.add(Permission.objects.get(title = 'test'),\
-                      Permission.objects.get(title = '首页'),\
+    r.permissions.add(Permission.objects.get(title = '首页'),\
                       Permission.objects.get(title = '帮助文档'),\
-                      Permission.objects.get(title = '联系我们'),\
-                      Permission.objects.get(title = '上传问卷Excel'),\
-                      Permission.objects.get(title = '问卷调查题库'),\
-                      Permission.objects.get(title = '问卷查询'),\
-                      Permission.objects.get(title = '数据统计保存为Excel'),\
-                      Permission.objects.get(title = '总体评价'),\
-                      Permission.objects.get(title = '问卷图表显示'),\
-                      Permission.objects.get(title = '问卷图表显示排名'),\
-                      Permission.objects.get(title = '设置阀值'),\
-                      Permission.objects.get(title = '显示阀值'),\
-                      Permission.objects.get(title = '生成分析报告文件'),\
-                      Permission.objects.get(title = '下载问卷模板'),\
-                      Permission.objects.get(title = '下载分析报告'),\
                       Permission.objects.get(title = '上传文件'),\
-                      Permission.objects.get(title = '上传文件'),\
+                      Permission.objects.get(title = '下载文件'),\
                       
+                      Permission.objects.get(title = '采购列表'),\
+                      Permission.objects.get(title = '添加采购'),\
+                      Permission.objects.get(title = '删除采购'),\
+                      Permission.objects.get(title = '修改采购'),\
+                      Permission.objects.get(title = '批量采购导入'),\
+                      Permission.objects.get(title = '下载采购模板'),\
+                      
+                      Permission.objects.get(title = '送货列表'),\
+                      Permission.objects.get(title = '添加送货'),\
+                      Permission.objects.get(title = '修改送货'),\
+                      Permission.objects.get(title = '删除送货'),\
+                      Permission.objects.get(title = '批量导入送货'),\
+                      Permission.objects.get(title = '下载送货模板'),\
+                      Permission.objects.get(title = '下载送货单页电子表格'),\
+                      Permission.objects.get(title = '下载送货全部电子表格'),\
+                      
+                      Permission.objects.get(title = '批量导入销售成本'),\
+                      Permission.objects.get(title = '销售成本列表'),\
+                      Permission.objects.get(title = '添加销售成本'),\
+                      Permission.objects.get(title = '修改销售成本'),\
+                      Permission.objects.get(title = '删除销售成本'),\
+                      Permission.objects.get(title = '销售成本利润图形'),\
+                      Permission.objects.get(title = '下载销售成本单页电子表格'),\
+                      Permission.objects.get(title = '下载销售成本全部电子表格'),\
+                      
+                      Permission.objects.get(title = '批量导入应付账款'),\
+                      Permission.objects.get(title = '下载应付账款模板'),\
+                      Permission.objects.get(title = '应付账款列表'),\
+                      Permission.objects.get(title = '添加应付账款'),\
+                      Permission.objects.get(title = '修改应付账款'),\
+                      Permission.objects.get(title = '删除应付账款'),\
+                      Permission.objects.get(title = '下载应付账款单页电子表格'),\
+                      Permission.objects.get(title = '下载应付账款全部电子表格'),\
+                                                                  
+                    Permission.objects.get(title = '批量导入应收账款'),\
+                    Permission.objects.get(title = '下载应收账款模板'),\
+                    Permission.objects.get(title = '应收账款列表'),\
+                    Permission.objects.get(title = '添加应收账款'),\
+                    Permission.objects.get(title = '修改应收账款'),\
+                    Permission.objects.get(title = '删除应收账款'),\
+                    Permission.objects.get(title = '下载应收账款单页电子表格'),\
+                    Permission.objects.get(title = '下载应收账款全部电子表格'),\
+                      
+                    Permission.objects.get(title = '批量导入材料报表'),\
+                    Permission.objects.get(title = '下载材料报表模板'),\
+                    Permission.objects.get(title = '材料报表列表'),\
+                    Permission.objects.get(title = '添加材料报表'),\
+                    Permission.objects.get(title = '修改材料报表'),\
+                    Permission.objects.get(title = '删除材料报表'),\
+                    Permission.objects.get(title = '下载材料报表单页电子表格'),\
+                    Permission.objects.get(title = '下载材料报表全部电子表格'),\
+
+                    Permission.objects.get(title = '批量导入产销存报表'),\
+                    Permission.objects.get(title = '下载产销存报表模板'),\
+                    Permission.objects.get(title = '产销存列表'),\
+                    Permission.objects.get(title = '添加产销存报表'),\
+                    Permission.objects.get(title = '修改产销存报表'),\
+                    Permission.objects.get(title = '删除产销存报表'),\
+                    Permission.objects.get(title = '下载产销存报表单页电子表格'),\
+                    Permission.objects.get(title = '下载产销存报表全部电子表格'),\
+
+                    Permission.objects.get(title = '批量导入领料汇总'),\
+                    Permission.objects.get(title = '下载领料汇总模板'),\
+                    Permission.objects.get(title = '领料汇总列表'),\
+                    Permission.objects.get(title = '添加领料汇总'),\
+                    Permission.objects.get(title = '修改领料汇总'),\
+                    Permission.objects.get(title = '删除领料汇总'),\
+                    Permission.objects.get(title = '下载领料汇总单页电子表格'),\
+                    Permission.objects.get(title = '下载领料汇总全部电子表格'),\
+
+                    Permission.objects.get(title = '批量导入材料入库'),\
+                    Permission.objects.get(title = '下载材料入库模板'),\
+                    Permission.objects.get(title = '材料入库列表'),\
+                    Permission.objects.get(title = '添加材料入库'),\
+                    Permission.objects.get(title = '修改材料入库'),\
+                    Permission.objects.get(title = '删除材料入库'),\
+                    Permission.objects.get(title = '下载材料入库单页电子表格'),\
+                    Permission.objects.get(title = '下载材料入库全部电子表格'),\
+
+                    Permission.objects.get(title = '批量导入成品入库'),\
+                    Permission.objects.get(title = '下载成品入库模板'),\
+                    Permission.objects.get(title = '成品入库列表'),\
+                    Permission.objects.get(title = '添加成品入库'),\
+                    Permission.objects.get(title = '修改成品入库'),\
+                    Permission.objects.get(title = '删除成品入库'),\
+                    Permission.objects.get(title = '下载成品入库单页电子表格'),\
+                    Permission.objects.get(title = '下载成品入库全部电子表格'),\
+
+                                            
                       Permission.objects.get(title = '客户列表'),\
                       Permission.objects.get(title = '添加客户'),\
                       Permission.objects.get(title = '删除客户'),\
@@ -199,9 +345,7 @@ if __name__ == "__main__":
                     Permission.objects.get(title = '批量操作权限'),\
                     Permission.objects.get(title = '批量删除权限'),\
                     Permission.objects.get(title = '分配权限'),\
-                    
-                    Permission.objects.get(title = '问卷答题初始化'),\
-                    
+                                     
                     )
     r.save()
 
@@ -212,16 +356,15 @@ if __name__ == "__main__":
     r = Role.objects.get(title = '主管')
     r.permissions.add(Permission.objects.get(title = '首页'),\
                       Permission.objects.get(title = '帮助文档'),\
-                      Permission.objects.get(title = '联系我们'),\
-                      Permission.objects.get(title = '问卷调查题库'),\
-                      Permission.objects.get(title = '客户列表'),\
-                      Permission.objects.get(title = '添加客户'),\
-                      Permission.objects.get(title = '修改客户'),\
-                      Permission.objects.get(title = '批量导入'),\
-                      Permission.objects.get(title = '下载模板'),\
-                      Permission.objects.get(title = '账单列表'),\
-                      Permission.objects.get(title = '添加账单'),\
-                      Permission.objects.get(title = '修改账单'),\
+                      Permission.objects.get(title = '上传文件'),\
+                      Permission.objects.get(title = '下载文件'),\
+                      
+                      Permission.objects.get(title = '采购列表'),\
+                      Permission.objects.get(title = '添加采购'),\
+                      Permission.objects.get(title = '删除采购'),\
+                      Permission.objects.get(title = '修改采购'),\
+                      Permission.objects.get(title = '批量采购导入'),\
+                      Permission.objects.get(title = '下载采购模板'),\
                       )
     r.save()
 
@@ -232,8 +375,9 @@ if __name__ == "__main__":
     r = Role.objects.get(title = '普通用户')
     r.permissions.add(Permission.objects.get(title = '首页'),\
                       Permission.objects.get(title = '帮助文档'),\
-                      Permission.objects.get(title = '联系我们'),\
-                      Permission.objects.get(title = '问卷调查题库'),\
+                      Permission.objects.get(title = '上传文件'),\
+                      Permission.objects.get(title = '下载文件'),\
+        
                       )
     r.save()
     
@@ -263,34 +407,14 @@ if __name__ == "__main__":
         c.company = i[3]
         c.save()
         
+    #付费金额
+    moneys = [100, 200, 300, 400]
     # 账单 初始化 -- 4个账单
-    for i in customers:
+    for n, i in enumerate(customers):
         p = Payment()
         p.customer = Customer.objects.get(name = i[0]) 
-        p.money = random.randint(1, 5) #1-5随机整数
+        p.money = moneys[n]
         p.save()  
 
-    s = Setvalue()
-    s.a_per = 20
-    s.b_per = 20
-    s.c_per = 20
-    s.d_per = 20
-    s.e_per = 20
-    s.save()
-
-'''    
-    # 初始化问卷 3人 
-    from bank.models import Bankemploye, Bankuser
-    investigation_list = Bankemploye.objects.values_list('investigation', flat=True).order_by('id')
-    for r in roots:
-        for i in investigation_list:
-            b = Bankuser()
-            b.name = r[0]
-            b.ask = i
-            b.reply = str(random.randint(1, 5))
-            b.save()
-'''   
-    
-    
-    
+     
         

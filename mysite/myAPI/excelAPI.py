@@ -2,90 +2,50 @@
 import os
 import xlrd
 import xlsxwriter
+import time
+import datetime
+from decimal import * #浮点数保留2位小数
 from django.shortcuts import render, redirect, HttpResponse
-def load_excel_model(file_excel, model, k):
-    '''本地的Excel文件，导入数据库(Bankemploye) '''
-       
-    '''数据库(Bankemploye)字段
-    k = ['serialNumber', 'title', 'subitem', 'drivingfactors', 'investigation',\
-         'classificationNumber', 'score', 'dimensionalItems', 'remarks']
-         
-        注：        
-        打开本地Excel文件文件，并读取内容
-        workbook = xlrd.open_workbook(filename='本地文件路径.xlsx')
-        
-        打开上传的Excel文件，并读取内容
-        user_excel = request.FILES.get('user_excel')
-        workbook = xlrd.open_workbook(file_contents=user_excel.file.read())
-    '''        
-    ext = os.path.splitext(file_excel)[1]    
-    if 'xls' not in ext and 'xlsx' not in ext:
-        print('err: 请上传的Excel文件')
-        return False
+from xlrd import xldate_as_tuple
 
-    workbook = xlrd.open_workbook(filename = file_excel)
-    return excel_sheet(file_excel, workbook, model, k)
-    
-def post_excel_model(request, post_file_excel, model, k):
+def get_date(date_int):
+  """ 43250 --> 2018-05-30;  61 --> 1900-03-01"""
+  date = xldate_as_tuple(date_int,0)
+  value = datetime.datetime(*date)
+  return str(value).split(' ')[0]
+
+def get_model_first_id(model):
+    """ 获得数据库第一条记录的id"""
+    name = model.objects.filter().first()
+    return model.objects.filter(name = name).first().id
+
+
+
+
+# def get_workbook(request, post_file_excel):
+#     post_excel = request.FILES.get(post_file_excel)
+#     ext = os.path.splitext(post_excel.name)[1]    
+#     if 'xls' not in ext and 'xlsx' not in ext:
+#         return 'err: 请上传Excel文件'        
+#     return post_excel
+#     #xlrd.open_workbook(file_contents=post_excel.file.read())    
+# 
+# def post_excel_model_names(request, post_file_excel, model, k):
+#     '''上传的Excel文件，导入数据库(Bankemploye)'''
+#     post_excel = get_workbook(request, post_file_excel)
+#     if post_excel[0:3] == 'err':
+#         return post_excel
+#     workbook = xlrd.open_workbook(file_contents=post_excel.file.read())
+#     return excel_sheet_name(post_file_excel, workbook, model, k)
+
+def post_excel_model_names(request, post_file_excel, model, k):
     '''上传的Excel文件，导入数据库(Bankemploye)'''
     user_excel = request.FILES.get(post_file_excel)
     ext = os.path.splitext(user_excel.name)[1]    
     if 'xls' not in ext and 'xlsx' not in ext:
-        print('err: 请上传的Excel文件')
+        print('err: 请上传Excel文件')
         return False
-    
-    workbook = xlrd.open_workbook(file_contents=user_excel.file.read())
-    return excel_sheet(user_excel, workbook, model, k)
-
-def excel_sheet(file_excel, workbook, model, k):
-    """Excel文件(单元格合并的电子表格同样适用)，导入数据库
-    打开上传的Excel文件
-    user_excel = request.FILES.get(post_file_excel)
-    workbook = xlrd.open_workbook(file_contents=user_excel.file.read())  
-    
-    打开本地Excel文件
-    workbook = xlrd.open_workbook(filename='本地文件路径.xlsx')  
-    
-    model：  数据库（Bankemploye）
-    数据库(Bankemploye)字段 与Excel表格列 对应
-    k = ['serialNumber', 'title', 'subitem', 'drivingfactors', 'investigation',\
-         'classificationNumber', 'score', 'dimensionalItems', 'remarks']    
-    """
-    sheet = workbook.sheet_by_index(0)      
-    try:
-        mylist = []
-        object_list = []
-        for row_num in range(1, sheet.nrows):
-            row = sheet.row(row_num)            
-            v = []
-            for (index,r) in enumerate(row):                
-                s = r.value
-                if s:
-                    v.append(s.strip()) if isinstance(s, str) else v.append(int(s)) 
-                else:
-                    if row_num == 1:
-                        v.append(s.strip()) if isinstance(s, str) else v.append(int(s)) 
-                    else: 
-                        v.append(mylist[row_num-2][index])                                
-            mylist.append(v)
-            d = dict(zip(k,v)) 
-            object_list.append(model(**d))      
-        model.objects.bulk_create(object_list, batch_size=20)
-                     
-        print('电子表格导入成功. %s. %s条记录' %(file_excel, len(mylist)))
-        return True
-    except Exception as e:
-        print('err: %s.  ' %(e))
-        return False
-        
-def post_excel_model_name(request, post_file_excel, model, k):
-    '''上传的Excel文件，导入数据库(Bankemploye)'''
-    user_excel = request.FILES.get(post_file_excel)
-    ext = os.path.splitext(user_excel.name)[1]    
-    if 'xls' not in ext and 'xlsx' not in ext:
-        print('err: 请上传的Excel文件')
-        return False
-        
+          
     workbook = xlrd.open_workbook(file_contents=user_excel.file.read())
     return excel_sheet_name(user_excel, workbook, model, k)
 
@@ -168,12 +128,28 @@ def list_to_xlsx(data, headings, filePath):
         bold = workbook.add_format({'bold': 1})  
         worksheet.write_row('A1', headings, bold)
         for n in range(len(headings)):
-            worksheet.write_column(chr(A + n) +'2', data[n])
+            if n < 26:
+                worksheet.write_column(chr(A + n) +'2', data[n])
+            else:
+                worksheet.write_column('A'+chr(A + n-26) +'2', data[n])
         workbook.close() 
     except Exception as e:       
-        print('%s' %(e))
+        print('list_to_xlsx err: %s' %(e))
         ret = False    
     return ret 
+
+
+# # 列表保存为电子表格。data形如[['data1',...],['data1',...],...]数据 , headings电子表格标题，电子表格标题栏，与数据库字段保持一致。参见models.py Order数据库字段； filePath文件路径
+# def savexlsx(data, headings, filePath):
+#     A = 65 # 'A'
+#     workbook = xlsxwriter.Workbook(filePath)
+#     worksheet = workbook.add_worksheet()
+#     bold = workbook.add_format({'bold': 1})  #如何控制单元格宽度？  
+#     worksheet.write_row('A1', headings, bold)
+#     for n in range(len(headings)):
+#         worksheet.write_column(chr(A + n) +'2', data[n])
+#     workbook.close() 
+#     return ''       
 
 
 def list_to_htmlTableStr(datas):

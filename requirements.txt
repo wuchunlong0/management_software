@@ -17,3 +17,4 @@ markdown
 django-markdown-deux
 matplotlib
 mpl_finance
+pypinyin

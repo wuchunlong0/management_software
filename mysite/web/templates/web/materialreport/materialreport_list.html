@@ -1,0 +1,136 @@
+{% extends 'layout.html' %}
+{% load rbac %}
+
+{% block content %}      
+<div class="luffy-container">
+    <div class="col-md-12 column">
+        <div class="btn-group form-inline">
+            {% if request|has_permission:"materialreport_add" %}
+                <a class="btn btn-default" href="/web/materialreport/add/">
+                    <i class="fa fa-plus-square" aria-hidden="true"></i> 添加
+                </a>
+            {% endif %}
+
+            {% if request|has_permission:"materialreport_import" %}
+                <a class="btn btn-default" href="/web/materialreport/import/">
+                    <i class="fa fa-file-excel-o" aria-hidden="true"></i> 批量导入
+                </a>
+            {% endif %}
+        </div>
+        <div class="btn-group form-inline">
+            <form method="post" action="/web/materialreport/makexlsx/page/{{page}}" class="form-inline" role="form">
+                {% csrf_token %}
+
+                {% for k,v in cleanData.items %}
+                    <input type="text" class="form-control" value="{{ v }}" name="{{ k }}" style="display:none"/>
+                {% endfor %}
+                <input type="text" class="form-control" value="{{ page }}" name="page" style="display:none"/>
+                <button class="btn btn-info" type="submit" > 单页保存Excel </button>
+
+            </form>
+        </div>
+
+        <div class="btn-group form-inline">
+            <form method="post" action="/web/materialreport/makexlsx/all/{{page}}" class="form-inline" role="form">
+                {% csrf_token %}
+
+                {% for k,v in cleanData.items %}
+                    <input type="text" class="form-control" value="{{ v }}" name="{{ k }}" style="display:none"/>
+                {% endfor %}
+                <input type="text" class="form-control" value="{{ page }}" name="page" style="display:none"/>
+                <button class="btn btn-success" type="submit" > 全部保存Excel </button>
+                
+            </form>
+        </div><br><br>
+
+        {% include 'web/form_name_date_post.html' %} <br><br>
+            
+    </div> <br><br>
+
+    {% include 'web/djangopage.html' %}  <!--分页-->
+    {% if name %}    
+       {{name}}:
+    {% endif %}
+
+    【上月结存金额总和({{lastmonth_money}}) -- 收入金额总和({{income_money}}) -- 加权金额总和({{weighting_money}}) -- 生产支出金额总和({{production_expenditure_money}}) -- 材料支出金额总和({{material_expenditure_money}}) -- 销售金额总和({{sale_money}}) -- 本月结存金额总和({{thismonth_money}})        】&nbsp;&nbsp;
+    【开始时间：{{cleanData.date_start}} &nbsp;&nbsp;结束时间：{{cleanData.date_end}}】
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>日期</th>
+                <th>名称</th>
+                <th>材料名称</th>
+                <th>上月结存数量</th>
+                <th>上月结存单价</th>
+                <th>上月结存金额</th>
+                <th>收入数量</th>
+                <th>收入单价</th>
+                <th>收入金额</th>
+                <th>加权数量</th>
+                <th>加权单价</th>
+                <th>加权金额</th>
+                <th>生产支出数量</th>
+                <th>生产支出单价</th>
+                <th>生产支出金额</th>
+                <th>材料支出数量</th>
+                <th>材料支出金额</th>
+                <th>销售数量</th>
+                <th>销售金额</th>
+                <th>本月结存数量</th>
+                <th>本月结存单价</th>
+                <th>本月结存金额</th>
+                {% if request|has_permission:"materialreport_del" or request|has_permission:"materialreport_edit" %}
+                    <th>选项</th>
+                {% endif %}
+                <th>经办人</th
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in data_list %}
+                <tr>
+                    <td>{{ forloop.counter | add:offset }}</td>
+                    <td>{{ d.date }}</td>
+                    <td>{{ d.name }}</td>
+                    <td>{{ d.material_name }}</td>
+                    <td>{{ d.lastmonth_number }}</td>
+                    <td>{{ d.lastmonth_univalence }}</td>
+                    <td>{{ d.lastmonth_money }}</td>
+                    <td>{{ d.income_number }}</td>
+                    <td>{{ d.income_univalence }}</td>
+                    <td>{{ d.income_money }}</td>
+                    <td>{{ d.weighting_number }}</td>
+                    <td>{{ d.weighting_univalence }}</td>
+                    <td>{{ d.weighting_money }}</td>
+                    <td>{{ d.production_expenditure_number }}</td>
+                    <td>{{ d.production_expenditure_univalence }}</td>
+                    <td>{{ d.production_expenditure_money }}</td>                   
+                    <td>{{ d.material_expenditure_number }}</td>
+                    <td>{{ d.material_expenditure_money }}</td>
+                    <td>{{ d.sale_number }}</td>
+                    <td>{{ d.sale_money }}</td>
+                    <td>{{ d.thismonth_number }}</td>
+                    <td>{{ d.thismonth_univalence }}</td>
+                    <td>{{ d.thismonth_money }}</td>
+
+                    {% if request|has_permission:"receivable_del" or request|has_permission:"receivable_edit" %}
+                        <td>
+                            {% if request|has_permission:"materialreport_edit" %}
+                                <a style="color: #333333;" href="/web/materialreport/edit/{{d.id}}/"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                            {% endif %}&nbsp;
+                            {% if request|has_permission:"materialreport_del" %}
+                                <a style="color: #d9534f;" href="/web/materialreport/del/{{d.id }}/"  onclick="return confirm('采购日期: {{d.date}}; \n名称: {{d.name}}。\n删除不可恢复,确定要删除此文件吗?')">
+                                <i class="fa fa-trash-o"></i></a>
+                            {% endif %}
+                        </td>
+                    {% endif %}
+
+                    <td>{{ d.operator }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% include 'web/djangopage.html' %}  <!--分页-->
+{% endblock %}

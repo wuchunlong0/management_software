@@ -1,5 +1,39 @@
 # -*- coding: utf-8 -*-
 from decimal import *
+from pypinyin import lazy_pinyin
+
+# def pinyin(mylist):
+#     """
+#     拼音排序
+#     mylist = ['鑫','鹭','榕','柘','珈','骅','孚','迦','瀚','濮','浔','沱','泸','恺','怡','岷','萃','兖','a','x']
+#              ['a', '萃', '孚', '骅', '瀚', '珈', '迦', '恺', '鹭', '泸', '岷', '濮', '榕', '沱', '鑫', '浔', 'x', '怡', '兖', '柘']
+#     """
+#     mylist.sort(key=lambda char: lazy_pinyin(char)[0][0])
+#     mylist.insert(0, "") #插入""
+#     return mylist
+
+#     拼音排序
+#     mylist = ['鑫','鹭','榕','柘','珈','骅','孚','迦','瀚','濮','浔','沱','泸','恺','怡','岷','萃','兖','a','x']
+#              ['a', '萃', '孚', '骅', '瀚', '珈', '迦', '恺', '鹭', '泸', '岷', '濮', '榕', '沱', '鑫', '浔', 'x', '怡', '兖', '柘']
+#     """
+def is_chinese(uchar):
+   """判断一个unicode是否是汉字"""
+   return uchar >= u'\u4e00' and uchar<=u'\u9fa5'
+
+def is_list_chinese(mylist):
+    for m in mylist:
+        if is_chinese(m):
+            return True
+    return False 
+              
+def pinyin(mylist):
+    if is_list_chinese(mylist):
+        """如果有中文,按拼音排序"""
+        mylist.sort(key=lambda char: lazy_pinyin(char)[0][0])
+    else:
+        mylist.sort()
+    return mylist
+
 
 def get_sum(mylist):
     '''获得列表元素和 返回浮点数字字符串，保留2位小数。[1,2,3] --> '6.00' '''

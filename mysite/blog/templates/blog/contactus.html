@@ -1,0 +1,86 @@
+{% extends 'blog/home.html' %}
+{% block content %}
+<div class="content-wrapper" style="height: 1240px; background:#fff;">  
+    <div class="col-md-12 column">
+        <div class="box box-info" style="height:540px; width:1000px;padding-left:300px;">            
+            <div class="box-header">
+                <h3 class="box-title">【 联系我们 】 {{meg}}</h3>
+                <h3 class="box-title">公司地址：江苏省丹阳众创产业园A2-2 电话: 13914583333 </h3>   
+            </div>
+            <div class="box-body" >
+                <form action="{% url 'contactus' %}" method="post">
+            	   {% csrf_token %}
+                    <span class="input input--ichiro">
+                        <div class="invalid-feedback"><i class="fa fa-user" aria-hidden="true"></i> </div>
+                        <input name="name" type="text" class="form-control" required="required" pattern="[\u4e00-\u9fa5]{2,}" placeholder="请输入姓名 中文且大于2个汉字">
+                        
+                    </span> <br>
+
+                    <span class="input input--ichiro">
+                        <div class="invalid-feedback"><i class="fa fa-envelope" aria-hidden="true"></i> </div>
+                        <input name="email" type="email" class="form-control" required="required"  placeholder="输入邮箱 邮箱格式：admin@126.com">                        
+                    </span> <br>
+
+                    <span class="input input--ichiro">
+                        <div class="invalid-feedback"><i class="fa fa-phone"></i>
+                          </div>
+                        <input name="tel" type="text" class="form-control" required="required" pattern="1[34578]\d{9}$" placeholder="请输入手机号码 11位的数字">
+                        
+                    </span> <br>
+                    <span>
+                    <div class="invalid-feedback"> <i class="fa fa-pencil-square-o"></i> </div>
+                
+                    <textarea  name="content" class="form-control"  required="required" pattern="{4,}" placeholder="留言内容 我们将在24小时内联系您 ^o^" style="width: 100%; height: 125px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>                                                    
+                    </span><br>
+              
+                    <button class="btn btn-lg btn-danger btn-block" type="submit"> 提交 <i class="fa fa-arrow-circle-right"></i> </button>
+                </form>
+            </div> 
+       
+        </div>
+
+           
+            <!-- 电子地图 -->
+            <div class="fwmain" style="position:relative;width:100%;min-height:10px" rel="17">  
+                <div class="label clear dzdt408" id="408" rel="408" titles="电子地图"  usestate="1" style='width:1330px;height:630px;z-index:99;left:20px;top:4px;position:absolute;margin-left:0px;'>
+                    <div style="height:620px;overflow: hidden;" id="mapContainer408"></div>
+                    <div class="label_foot"></div>
+                </div>
+            </div>
+</div>          
+</div>
+
+<link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
+<script src="http://api.map.baidu.com/api?v=2.0 &ak=CEe15b3a997aef8acb9805e559fb23c0" type="text/javascript"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
+<script type="text/javascript">
+var map408 = new BMap.Map("mapContainer408");
+var poi408 = new BMap.Point(119.677752,32.001764); //江西省九江市湖口县民德路71号
+map408.centerAndZoom(poi408, 15);
+//map408.enableScrollWheelZoom();  //启用滚轮放大缩小
+var content408 = '<div style="margin:0;line-height:20px;padding:2px;">' + '<img src="/template/images/nopic.jpg" style="float:right;zoom:1;overflow:hidden;width:0px;height:0px;margin-left:3px;"/>' + '公司地址：江苏省丹阳市众创产业园<br>联系电话：13914583333<br>' + '</div>';
+var marker408 = new BMap.Marker(poi408); //创建marker对象
+marker408.disableDragging();  //禁止拖拽
+map408.addOverlay(marker408); //在地图中添加marker
+marker408.setAnimation(BMAP_ANIMATION_BOUNCE);  //跳动的标注
+map408.addControl(new BMap.ScaleControl());  // 添加比例尺控件
+map408.addControl(new BMap.MapTypeControl({mapTypes: [BMAP_NORMAL_MAP,BMAP_HYBRID_MAP]})); //添加地图类型控件(2D，卫星，三维)
+map408.addControl(new BMap.NavigationControl());   //左上角，添加默认缩放平移控件
+var searchInfoWindow408 = null;  //创建检索信息窗口对象
+searchInfoWindow408 = new BMapLib.SearchInfoWindow(map408, content408, {
+  title  : "江苏省丹阳市众创产业园A2-2",
+  width  : 200,
+  height : 100,
+  panel  : "panel",
+  enableAutoPan : true,
+  searchTypes   :[
+    BMAPLIB_TAB_SEARCH,
+    BMAPLIB_TAB_TO_HERE,
+    BMAPLIB_TAB_FROM_HERE
+  ]
+});
+searchInfoWindow408.open(marker408);
+</script>
+
+
+{% endblock %}

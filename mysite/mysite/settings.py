@@ -149,9 +149,9 @@ LOGOUT_REDIRECT_URL = '/'
 
 PERMISSION_SESSION_KEY = "luffy_permission_url_list_key"
 MENU_SESSION_KEY = "luffy_permission_menu_key"
-VALID_URL_LIST = [
+VALID_URL_LIST = [     
     '/login/',
-    '/admin/.*'
+    '/admin/.*'    
 ]
 AUTO_DISCOVER_EXCLUDE = [
     '/admin/.*'

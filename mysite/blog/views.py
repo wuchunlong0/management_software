@@ -19,8 +19,25 @@ def sigin(request):
             return HttpResponse("OK")
     return render(request, "blog/login.html")
 
-def index(request):
-    return HttpResponse("index")
+def home(request):
+    return render(request, 'blog/home.html', context=locals()) 
+
+def contactus(request):
+    if request.method != 'POST':
+        return  render(request, 'blog/contactus.html', context=locals())  
+    meg = '提交成功，我们将在24小时内联系您 ^o^'
+    cleanData = request.POST.dict() 
+    del cleanData['csrfmiddlewaretoken']       
+    iscontact = Contacts.objects.filter(content = cleanData.get('content',''))
+    if iscontact:
+        meg = '已经提交过了，不要重复提交！我们将在24小时内联系您 ^o^'
+    else:            
+        c = Contacts(**cleanData)
+        c.save()            
+    return  render(request, 'blog/contactus.html', context=locals())  
+
+
+
 
 
 # http://localhost:8000/user_list/

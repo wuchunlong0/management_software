@@ -57,8 +57,8 @@ function creator_db {
 }
 
 function write_data_db {
-	# logging "excel_import.py"
-    # python "${BASE_DIR}/mysite/excel_import.py"
+    logging "initdb0.py"
+    python "${BASE_DIR}/mysite/initdb0.py"
     logging "initdb.py"
 	python "${BASE_DIR}/mysite/initdb.py"
     

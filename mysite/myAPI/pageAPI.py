@@ -2,7 +2,7 @@
 # 单元(类、函数)测试方法：Eclipse环境 选择运行图标 --> Run As --> Python Run 
 # pageAPI.py  分页类
 # wcl6005@126.com    2017.2.5
-PAGE_NUM = 30 #每页显示数
+PAGE_NUM = 25 #每页显示数
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # 使用该函数步骤：2018.03.21
@@ -194,17 +194,6 @@ def _get_listRows(request,listRow):
         listRows = 4
     return listRows        
         
-# def get_items_by_page(pageIndex, Model):#保留文相工程
-#     total = Model.query.count()
-#     page = Page(total, pageIndex)
-#     models = Model.query.offset(page.offset).limit(page.limit)
-#     return models, page
-#  
-# def get_items_page(pageIndex, Model, page_size):#保留文相工程 
-#     total = Model.query.count()
-#     page = Page(total, pageIndex, page_size)
-#     models = Model.query.offset(page.offset).limit(page.limit)
-#     return models, page 
        
 if __name__ == "__main__":
     import doctest

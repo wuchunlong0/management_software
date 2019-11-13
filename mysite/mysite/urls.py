@@ -18,15 +18,19 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.views.generic import RedirectView
 
-
+import blog 
+from web.views import account
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
-    url(r'^rbac/', include('rbac.urls', namespace='rbac')),
-    url(r'^', include('web.urls')),   
+    url(r'^rbac/', include('rbac.urls', namespace='rbac')),  #这样使用  return redirect(reverse('rbac:role_list'))
+    url(r'^web/', include('web.urls')),   
     url(r'^blog/', include('blog.urls')),
     url(r'^bank/', include('bank.urls')),
-        
 
+        
+    url(r'^login/$', account.login, name='login'),
+    
+    url(r'^', RedirectView.as_view(url='/home/')), 
 ]

@@ -44,6 +44,35 @@ def listdictTolists(listdict):
             [v for d in listdict for k,v in d.items() if k == 'd'],\
             [v for d in listdict for k,v in d.items() if k == 'e']]        
 
+
+def get_dict_val(mydict):
+    """字典中两个元素'name', 'name_in'，当字典两个元素都有值时，取最后一个值"""
+    name = ''
+    if not mydict.get('name','') and mydict.get('name_in',''): #0 1
+        name = mydict['name_in'] 
+    elif mydict.get('name','') and not mydict.get('name_in',''): #1 0
+        name = mydict['name']       
+    elif mydict.get('name','') and mydict.get('name_in',''): #1 1
+        name = mydict['name_in']       
+    else:
+        pass      
+    return name
+
+def get_dict_customer(mydict):
+    """字典中两个元素'name', 'name_in'，当字典两个元素都有值时，取最后一个值"""
+    customer = ''
+    if not mydict.get('customer','') and mydict.get('customer_in',''): #0 1
+        customer = mydict['customer_in'] 
+    elif mydict.get('customer','') and not mydict.get('customer_in',''): #1 0
+        customer= mydict['customer']       
+    elif mydict.get('customer','') and mydict.get('customer_in',''): #1 1
+        customer = mydict['customer_in']       
+    else:
+        pass      
+    return customer
+
+
+
 import unittest            
 class TestlistdictAPI(unittest.TestCase):     
     def test_isListAllInStr_all_T(self):

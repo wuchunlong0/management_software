@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="luffy-container">
+        <form class="form-horizontal clearfix" method="post" enctype="multipart/form-data">
+            {% csrf_token %}                      
+            <div class="form-group col-sm-6 clearfix">
+                <label class="col-sm-3 control-label">日期</label>
+                <input name="date" type="text" value="{{obj.date}}" style="width:300px;" required> 
+            </div>
+            <div class="form-group col-sm-6 clearfix">
+                <label class="col-sm-3 control-label">供货商名称</label>
+                <input  name="name" type="text" value="{{obj.name}}" style="width:300px;"  required> 
+            </div>
+            <div class="form-group col-sm-6 clearfix">
+                <label class="col-sm-3 control-label">采购产品名称</label>
+                <input  name="product" type="text" value="{{obj.product}}" style="width:300px;"  required> 
+            </div>            
+
+            <div class="form-group col-sm-6 clearfix">
+                <label class="col-sm-3 control-label">数量</label>
+                <input  name="number" type="text" value="{{obj.number}}" style="width:300px;"  required> 
+            </div>
+
+            <div class="form-group col-sm-6 clearfix">
+                <label class="col-sm-3 control-label">单价</label>
+                <input  name="price" type="text" value="{{obj.price}}" style="width:300px;"  required> 
+            </div>
+
+            <div class="form-group col-sm-6 clearfix">
+                <label class="col-sm-3 control-label">支付款</label>
+                <input  name="payment" type="text" value="{{obj.payment}}" style="width:300px;"  required> 
+            </div>
+            <div class="form-group col-sm-6 clearfix">
+                <label class="col-sm-3 control-label">支付方式</label>
+                <input  name="payment_method" value="{{obj.payment_method}}" type="text" style="width:300px;"  required> 
+            </div>
+            
+            <div class="form-group col-sm-6 clearfix">
+                <label class="col-sm-3 control-label">备注</label>
+                <input  name="note" type="text" value="{{obj.note}}" style="width:300px;"  required> 
+            </div>
+             
+            <div class="form-group col-sm-12">
+                <div class="col-sm-6">
+                    <div class="col-sm-offset-3">
+                        <button type="submit" class="btn btn-primary">提 交</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -12,8 +12,7 @@ def payment_list(request):
     :return:
     """
     data_list = models.Payment.objects.all()
-    return render(request, 'payment_list.html', context=locals())
-
+    return render(request, 'web/payment/payment_list.html', context=locals())
 
 def payment_add(request):
     """
@@ -22,12 +21,12 @@ def payment_add(request):
     """
     if request.method == 'GET':
         form = PaymentForm()
-        return render(request, 'payment_edit.html', context=locals())
+        return render(request, 'web/form_submit.html', context=locals())
     form = PaymentForm(data=request.POST)
     if form.is_valid():
         form.save()
-        return redirect('/payment/list/') 
-    return render(request, 'payment_edit.html', context=locals())
+        return redirect('/web/payment/list/') 
+    return render(request, 'web/form_submit.html', context=locals())
 
 
 def payment_edit(request, pid):
@@ -38,12 +37,12 @@ def payment_edit(request, pid):
     obj = models.Payment.objects.get(id=pid)
     if request.method == 'GET':
         form = PaymentForm(instance=obj)
-        return render(request, 'payment_add.html', context=locals())
+        return render(request, 'web/form_submit.html', context=locals())
     form = PaymentForm(data=request.POST, instance=obj)
     if form.is_valid():
         form.save()
-        return redirect('/payment/list/')
-    return render(request, 'payment_add.html', context=locals())
+        return redirect('/web/payment/list/')
+    return render(request, 'web/form_submit.html', context=locals())
 
 
 def payment_del(request, pid):
@@ -54,4 +53,4 @@ def payment_del(request, pid):
     :return:
     """
     models.Payment.objects.filter(id=pid).delete()
-    return redirect('/payment/list/')
+    return redirect('/web/payment/list/')

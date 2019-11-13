@@ -1,0 +1,163 @@
+{% extends 'layout.html' %}
+{% load rbac %}
+{% block content %}      
+<div class="luffy-container">
+    <div class="col-md-12 column">
+        <div class="btn-group form-inline">
+            {% if request|has_permission:"cost_add" %}
+                <a class="btn btn-default" href="/web/cost/add/">
+                    <i class="fa fa-plus-square" aria-hidden="true"></i> 添加
+                </a>
+            {% endif %}
+
+            {% if request|has_permission:"cost_import" %}
+                <a class="btn btn-default" href="/web/cost/import/">
+                    <i class="fa fa-file-excel-o" aria-hidden="true"></i> 批量导入
+                </a>
+            {% endif %}
+        </div> 
+        <div class="btn-group form-inline">
+            <form method="post" action="/web/makexlsx/page/{{page}}" class="form-inline" role="form">
+                {% csrf_token %}
+
+                {% for k,v in cleanData.items %}
+                    <input type="text" class="form-control" value="{{ v }}" name="{{ k }}" style="display:none"/>
+                {% endfor %}
+                <input type="text" class="form-control" value="{{ page }}" name="page" style="display:none"/>
+                <button class="btn btn-info" type="submit" > 单页保存Excel </button>
+
+            </form>
+        </div>
+
+        <div class="btn-group form-inline">
+            <form method="post" action="/web/makexlsx/all/{{page}}" class="form-inline" role="form">
+                {% csrf_token %}
+
+                {% for k,v in cleanData.items %}
+                    <input type="text" class="form-control" value="{{ v }}" name="{{ k }}" style="display:none"/>
+                {% endfor %}
+                <input type="text" class="form-control" value="{{ page }}" name="page" style="display:none"/>
+                <button class="btn btn-success" type="submit" > 全部保存Excel </button>
+                
+            </form>
+        </div>
+        <br><br>
+        
+        <div class="btn-group form-inline">
+            <form method="post" class="form-inline" role="form">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="f1">&nbsp;&nbsp;客户名称</label>
+                    <select name="name" class="form-control" placeholder="客户名称" style="width:145px;">
+                        {% for i in name_list %}
+                            <option value="{{ i }}" >{{ i }}</option>
+                        {% endfor %}
+                    </select> 
+                </div>
+                <div class="form-group">
+                    <input type="text" name="name_in" class="form-control" placeholder="客户名称" style="width:145px;"/>
+                </div>  
+
+                <label for="f2">&nbsp;&nbsp;时间</label>
+                <div class="form-group">
+                    <input type="date" name="date_start" class="form-control" style="width:135px;"/>
+                </div>
+                
+                <div class="form-group">
+                    <input type="date" name="date_end" class="form-control" style="width:135px;"/>
+                </div>
+     
+                <button type="submit" class="btn btn-danger">查 询</button> 
+            </form>
+             
+        </div> 
+        <span><a href="/web/profit/graph/"> <span class="btn btn-lg1 btn-info">图表显示</span> </a></span> 
+    </div> <br><br>       
+    {% include 'web/djangopage.html' %} 
+    {% if name %}
+        <br>{{name}}:
+    {% endif %} 
+    【毛利({{pgross_profit}}) -- 费用({{total_expenses}}) -- 利润总额({{Total_profit}})】&nbsp;&nbsp;
+    【开始时间：{{cleanData.date_start}} &nbsp;&nbsp;结束时间：{{cleanData.date_end}}】
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>日期</th>
+                <th>客户名称</th>
+                <th>凭证号</th>
+                <th>摘要</th>
+                <th>开票额</th>
+                <th>发货额</th>
+                <th>成本金额</th>
+                <th>毛利</th>
+                <th>餐费</th>
+                <th>差旅费</th>
+                <th>礼品</th>
+                <th>礼金</th>
+                <th>娱乐</th>
+                <th>汽车费</th>
+                <th>小计0</th>
+                <th>费用率</th>
+                <th>退货运费</th>
+                <th>专车费用</th>
+                <th>客诉赔款</th>
+                <th>实际支付佣金</th>
+                <th>其他</th>
+                <th>小计1</th>
+                <th>费用合计</th>
+                
+                {% if request|has_permission:"cost_del" or request|has_permission:"cost_edit" %}
+                    <th>选项</th>
+                {% endif %}
+                <th>经办人</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for d in data_list %}
+                <tr>
+                    <td>{{ forloop.counter | add:offset }}</td>
+                    <td>{{ d.date }}</td>
+                    <td>{{ d.name }}</td>
+                    <td>{{ d.voucherno }}</td>
+                    <td>{{ d.abstract }}</td>
+                    <td>{{ d.invoice }}</td>
+                    <td>{{ d.delivery }}</td>
+                    <td>{{ d.cost_amount }}</td>                    
+                    <td>{{ d.pgross_profit }}</td>
+                    <td>{{ d.meals }}</td>
+                    <td>{{ d.travel_expenses }}</td>
+                    <td>{{ d.gift }}</td>
+                    <td>{{ d.cash_gift }}</td>                    
+                    <td>{{ d.recreation }}</td>
+                    <td>{{ d.car }}</td>
+                    <td>{{ d.subtotal0 }}</td>
+                    <td>{{ d.cost_rate }}</td>
+                    <td>{{ d.return_freight }}</td>                    
+                    <td>{{ d.special_car }}</td>
+                    <td>{{ d.customer_claims }}</td>
+                    <td>{{ d.payment_commission }}</td>
+                    <td>{{ d.other }}</td>
+                    <td>{{ d.subtotal1 }}</td>
+                    <td>{{ d.total_expenses }}</td>
+                    {% if request|has_permission:"deliverye_del" or request|has_permission:"delivery_edit" %}
+                        <td>
+                            {% if request|has_permission:"delivery_edit" %}
+                                <a style="color: #333333;" href="/web/cost/edit/{{d.id }}/">
+                                    <i class="fa fa-edit" aria-hidden="true"></i></a>
+                            {% endif %}&nbsp;
+                            {% if request|has_permission:"delivery_del" %}
+                                <a style="color: #d9534f;" href="/web/cost/del/{{d.id }}/"  onclick="return confirm('采购日期: {{d.date}}; \n名称: {{d.name}}。\n删除不可恢复,确定要删除此文件吗?')">
+                                <i class="fa fa-trash-o"></i></a>
+                            {% endif %}
+                        </td>
+                    {% endif %}
+                    <td>{{ d.operator }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include 'web/djangopage.html' %}  <!--分页-->
+{% endblock %}
